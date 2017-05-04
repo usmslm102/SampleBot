@@ -14,7 +14,23 @@ namespace HotelBot.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Hi I'm Bot");
+            await Respond(context);
             context.Wait(MesaageRecievedAsync);
+        }
+
+        private static async Task Respond(IDialogContext context)
+        {
+            var userName = String.Empty;
+            context.UserData.TryGetValue<string>("Name", out userName);
+            if (string.IsNullOrEmpty(userName))
+            {
+                await context.PostAsync("What is your Name?");
+                context.UserData.SetValue<bool>("GetName", true);
+            }
+            else
+            {
+                await context.PostAsync(String.Format("HI {0}. How Can I Help you today?", userName));
+            }
         }
 
         public async Task MesaageRecievedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -34,16 +50,8 @@ namespace HotelBot.Dialogs
             }
 
 
-            if (string.IsNullOrEmpty(userName))
-            {
-                await context.PostAsync("What is your Name?");
-                context.UserData.SetValue<bool>("GetName", true);
-            }
-            else
-            {
-                await context.PostAsync(String.Format("HI {0}. How Can I Help you today?", userName));
-            }
-            context.Wait(MesaageRecievedAsync);
+            await Respond(context);
+            context.Done(message);
         }
     }
 }
