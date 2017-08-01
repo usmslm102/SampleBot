@@ -16,17 +16,17 @@ namespace HotelBot.Dialogs
         public static readonly IDialog<string> dialog = Chain.PostToChain()
              .Select(msg => msg.Text)
              .Switch(
-            new RegexCase<IDialog<string>>(new Regex("^hi", RegexOptions.IgnoreCase), (context, text) =>
-              {
-                  return Chain.ContinueWith(new GreetingDialog(), AfterGreetingContinuation);
-              }),
+            //new RegexCase<IDialog<string>>(new Regex("^hi", RegexOptions.IgnoreCase), (context, text) =>
+            //  {
+            //      return Chain.ContinueWith(new GreetingDialog(), AfterGreetingContinuation);
+            //  }),
             new DefaultCase<string, IDialog<string>>((context, text) =>
              {
                  return Chain.ContinueWith(FormDialog.FromForm(RoomReservation.BuidForm, FormOptions.PromptInStart), AfterGreetingContinuation);
              }))
             .Unwrap()
             .PostToUser();
-            
+
 
         private async static Task<IDialog<string>> AfterGreetingContinuation(IBotContext context, IAwaitable<object> item)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Builder.FormFlow.Advanced;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,14 @@ namespace HotelBot.Models
         public List<AmenitiesOptions> Amenities;
         public static IForm<RoomReservation> BuidForm()
         {
-
             return new FormBuilder<RoomReservation>()
                 .Message("Welcome to the hotel Reservatio Bot!")
+                .Field(nameof(NumberOfOccupants))
+                .Field(new FieldReflector<RoomReservation>(nameof(Amenities))
+                .SetActive(x => x.NumberOfOccupants == 5))
+                .AddRemainingFields()
+                .Confirm("Confirm {*}")
                 .Build();
-
 
         }
     }
